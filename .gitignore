@@ -1,0 +1,9 @@
+#*
+._*
+Debug
+ipch
+*.vc*
+*.suo
+*.sln
+*.sdf
+npstest.txt
