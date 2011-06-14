@@ -1,18 +1,16 @@
 // todo:
 // scoring moves at end of line but not at maxply yet (if no moves or if m.piece=K/k in alphabeta)
 // understand win/lose/draw
-// (0.1.1) improve print_chessboard
 // (0.1.1) save FEN position
 // (0.1.1) add save to save in pgn
 // (0.1.1) add open to load from pgn
-// consider testing routine for new pieces (pgn/fen/print/score/...)
 // (0.1.1) current_variation cleanup (switch to array?)
 // (0.1.1) move_list cleanup (switch to array?)
-// add support for fen in uci position command
+// add support for fen in uci position command (test)
 // (0.1.1) add quiescent search
 // (0.1.1) add iterative deepening
 // (0.1.1) add support for xboard/winboard
-// update search/eval to support check by score
+// update search/eval to support check by score (test)
 // update search/eval to support checkmate by score
 // update search/eval to support stalemate by score
 // (0.1.1) check why splitting search.cpp get_moves() slowed search from 1.2m to 800k
@@ -27,17 +25,16 @@
 // support draw by repetition
 // (0.1.1) add mobility to eval() function (could just save move count wmc and bmc from movelist in alphabeta)
 // (0.1.x) add nicer interface for 'd'
-// update bitboards properly when castling
 // update can't castle through check
-// update can't castle if king moves - test
-// update can't castle if rook moves
+// update can't castle if king moves (test)
+// update can't castle if rook moves (test)
 // update if gui sends castling e1g1 ex how to fix
 // (0.1.1) add opening book
 // (0.1.1) add transposition tables
 // (0.1.1) add zobrist keys
 // time management / time controls
 // update king can't castle once king moves (test)
-// bug: black sometimes gets an extra rook on the f8 square maybe due to O-O in search
+// bug: black sometimes gets an extra rook on the f8 square maybe due to O-O in search (test)
 
 /*
  *	UCI Commands Supported
@@ -200,6 +197,17 @@ void makemove(move_t m) {
 			cout << "info string [error] INVALID ENPASSANT CAPTURE PIECE m.capture=" << m.capture << endl;
         }
     }
+
+	// was it a rook move that should disable castling priviledges
+	if ((m.src == 0) && (m.piece == WR)) {
+		white_can_castle_queenside = false;
+	} else if ((m.src == 7) && (m.piece == WR)) {
+		white_can_castle_kingside = false;
+	} else if ((m.src == 56) && (m.piece == BR)) {
+		black_can_castle_queenside = false;
+	} else if ((m.src == 63) && (m.piece == BR)) {
+		black_can_castle_kingside = false;
+	}
 	
 	// Was it a castling move?  If so the king should be good but the rook needs to be updated
 	if (m.piece == WK) {
@@ -357,36 +365,30 @@ void takeback(move_t m) {
 			bb_all_pieces45r = (bb_all_pieces45r & (~bb_squares[rotate45r[m.dst+1]])) | bb_squares[rotate45r[m.dst-2]];
 		} else if (m.dst == m.src + 2) {
 			// kingside castle
-			chessboard[m.dst + 1] = 0;
-			chessboard[m.dst - 1] = WR;
+			chessboard[m.dst + 1] = WR;
+			chessboard[m.dst - 1] = 0;
 			bb_white_rooks = (bb_white_rooks & (~bb_squares[m.dst-1])) | bb_squares[m.dst+1];
 			bb_all_pieces90 = (bb_all_pieces90 & (~bb_squares[rotate90[m.dst-1]])) | bb_squares[rotate90[m.dst+1]];
 			bb_all_pieces45l = (bb_all_pieces45l & (~bb_squares[rotate45l[m.dst-1]])) | bb_squares[rotate45l[m.dst+1]];
 			bb_all_pieces45r = (bb_all_pieces45r & (~bb_squares[rotate45r[m.dst-1]])) | bb_squares[rotate45r[m.dst+1]];
-			white_can_castle_kingside = false;
-			white_can_castle_queenside = false;
 		}
 	} else if (m.piece == BK) {
 		if (m.dst == m.src - 2) {
 			// queenside castle
-			chessboard[m.dst - 2] = 0;
-			chessboard[m.dst + 1] = BR;
+			chessboard[m.dst - 2] = BR;
+			chessboard[m.dst + 1] = 0;
 			bb_black_rooks = (bb_black_rooks & (~bb_squares[m.dst+1])) | bb_squares[m.dst-2];
 			bb_all_pieces90 = (bb_all_pieces90 & (~bb_squares[rotate90[m.dst+1]])) | bb_squares[rotate90[m.dst-2]];
 			bb_all_pieces45l = (bb_all_pieces45l & (~bb_squares[rotate45l[m.dst+1]])) | bb_squares[rotate45l[m.dst-2]];
 			bb_all_pieces45r = (bb_all_pieces45r & (~bb_squares[rotate45r[m.dst+1]])) | bb_squares[rotate45r[m.dst-2]];
-			black_can_castle_kingside = false;
-			black_can_castle_queenside = false;
 		} else if (m.dst == m.src + 2) {
 			// kingside castle
-			chessboard[m.dst + 1] = 0;
-			chessboard[m.dst - 1] = BR;
+			chessboard[m.dst + 1] = BR;
+			chessboard[m.dst - 1] = 0;
 			bb_black_rooks = (bb_black_rooks & (~bb_squares[m.dst-1])) | bb_squares[m.dst+1];
 			bb_all_pieces90 = (bb_all_pieces90 & (~bb_squares[rotate90[m.dst-1]])) | bb_squares[rotate90[m.dst+1]];
 			bb_all_pieces45l = (bb_all_pieces45l & (~bb_squares[rotate45l[m.dst-1]])) | bb_squares[rotate45l[m.dst+1]];
 			bb_all_pieces45r = (bb_all_pieces45r & (~bb_squares[rotate45r[m.dst-1]])) | bb_squares[rotate45r[m.dst+1]];
-			black_can_castle_kingside = false;
-			black_can_castle_queenside = false;
 		}
 	}
 	white_can_castle_kingside = m.white_can_castle_kingside;
