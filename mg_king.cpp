@@ -83,12 +83,13 @@ int gen_king_moves(move_t mv[]) {
 		}
 	}
     
+	// if white_to_move then black made the last move
     if (white_to_move) {
-        white_can_castle_kingside = false;
-        white_can_castle_queenside = false;
-    } else {
         black_can_castle_kingside = false;
         black_can_castle_queenside = false;
+    } else {
+        white_can_castle_kingside = false;
+        white_can_castle_queenside = false;
     }
 
 	return mv_idx;

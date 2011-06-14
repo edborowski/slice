@@ -87,11 +87,13 @@ int eval(void) {
 	// add black king to white, and white king to black since it's desirable for the alternate.
 	// if white_to_move, it's black's score because black just moved
 	if (white_to_move) {
-	    score = bpscore + bmscore + white_king_score - wpscore - wmscore - black_king_score;
+	    score = bpscore + bmscore + (white_king_score/2) - wpscore - wmscore - black_king_score;
+	    //score = bpscore + bmscore + white_king_score - wpscore - wmscore - black_king_score;
 	    //score = bpscore + white_king_score - wpscore -  black_king_score;
 		//cout << "black score:" << score << " wp:" << wpscore << " bk:" << black_king_score << " bp:" << bpscore << " wk:" << white_king_score << endl;
 	} else {
-		score = wpscore + wmscore + black_king_score - bpscore - bmscore - white_king_score;
+		score = wpscore + wmscore + (black_king_score/2) - bpscore - bmscore - white_king_score;
+		//score = wpscore + wmscore + black_king_score - bpscore - bmscore - white_king_score;
 		//score = wpscore + black_king_score - bpscore - white_king_score;
 		//cout << "white score:" << score << " wp:" << wpscore << " bk:" << black_king_score << " bp:" << bpscore << " wk:" << white_king_score << endl;
 	}

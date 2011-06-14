@@ -15,8 +15,6 @@
 // update search/eval to support check by score
 // update search/eval to support checkmate by score
 // update search/eval to support stalemate by score
-// update mg_king to support castling
-// update mg_king to validate not castling in or through check
 // (0.1.1) check why splitting search.cpp get_moves() slowed search from 1.2m to 800k
 // (0.1.1) try running gprof
 // (0.1.1) add standard test for nps performance
@@ -28,8 +26,8 @@
 // support 50-move rule
 // support draw by repetition
 // (0.1.1) add mobility to eval() function (could just save move count wmc and bmc from movelist in alphabeta)
-// (0.1.x) add nice chessboard for 'd' (see littlethought)
-// test castling
+// (0.1.x) add nicer interface for 'd'
+// update bitboards properly when castling
 // update can't castle through check
 // update can't castle if king moves - test
 // update can't castle if rook moves
@@ -38,6 +36,8 @@
 // (0.1.1) add transposition tables
 // (0.1.1) add zobrist keys
 // time management / time controls
+// update king can't castle once king moves (test)
+// bug: black sometimes gets an extra rook on the f8 square maybe due to O-O in search
 
 /*
  *	UCI Commands Supported
@@ -90,10 +90,19 @@ void new_game(string fen) {
 	move_list.clear();
 	bb_white_pawns = 0;
 	bb_white_knights = 0;
+	bb_white_bishops = 0;
+	bb_white_rooks = 0;
+	bb_white_queens = 0;
 	bb_white_king = 0;
 	bb_black_pawns = 0;
 	bb_black_knights = 0;
+	bb_black_bishops = 0;
+	bb_black_rooks = 0;
+	bb_black_queens = 0;
 	bb_black_king = 0;
+	bb_white_pieces = 0;
+	bb_black_pieces = 0;
+	bb_all_pieces = 0;
 	bb_all_pieces90 = 0;
 	bb_all_pieces45l = 0;
 	bb_all_pieces45r = 0;
@@ -535,6 +544,7 @@ int main(int argc, char *argv[])
 				nps = nodes;
 			}
 			cout << dec << "info string nps: " << nps << " nodes: " << nodes << " time: " << (end - start) << " seconds." << endl;
+			print_bitboard("bb_black_rooks", bb_black_rooks);
             cout << "bestmove " << boardsquares[m.src] << boardsquares[m.dst] << endl;
 		} else if (vinput[0] == "d") {
 			print_chessboard();

@@ -46,8 +46,9 @@ int gen_rook_moves(move_t mv[]) {
         //TODO: instead of shifting twice, shift once then AND with 255.
         bb_idx0 = bb_all_pieces << ((7 - (src_idx / 8)) * 8) >> 56;
         bb_idx90 = bb_all_pieces90 << ((7 - (src_idx90 / 8)) * 8) >> 56;
-        //bbRookMoves = (bbLegalSliding0Moves[index, (int)idx] | bbLegalSliding90Moves[index, (int)idx90]) & (~pos.bbWhitePieces);
-		bb_rook_dst = bb_legal_slidingh_moves[src_idx][bb_idx0] & (~bb_my_pieces);
+        //AdeptCS: bbRookMoves = (bbLegalSliding0Moves[index, (int)idx] | bbLegalSliding90Moves[index, (int)idx90]) & (~pos.bbWhitePieces);
+		//bb_rook_dst = bb_legal_slidingh_moves[src_idx][bb_idx0] & (~bb_my_pieces);
+		bb_rook_dst = (bb_legal_slidingh_moves[src_idx][bb_idx0] | bb_legal_slidingv_moves[src_idx][bb_idx90]) & (~bb_my_pieces);
 		while (bb_rook_dst > 0) {
 			dst_idx = bitScanForward(bb_rook_dst);
 			m.dst = dst_idx;

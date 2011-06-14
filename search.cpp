@@ -50,6 +50,7 @@ move_t movegen(int depth) {
 	bestmove.src = -1;
 	bestmove.dst = -1;
 
+	cout << "===================================================" << endl;
 	imoves = get_moves(moves);
 
 	for (int x = 0; x < imoves; x++) {
@@ -65,7 +66,8 @@ move_t movegen(int depth) {
         cout << move_to_long_algebraic(moves[x]) << " " << moves[x].score << endl;
 	}
 
-	cout << "bestmove: " << move_to_long_algebraic(bestmove) << " " << bestmove.score << endl;
+	cout << "selected: " << move_to_long_algebraic(bestmove) << " " << bestmove.score << endl;
+	cout << "===================================================" << endl;
 
 	return (bestmove);
 }
@@ -143,7 +145,7 @@ int alphabeta(int depth, int alpha, int beta) {
 
 		// decent print but too much info for gui
 		pv[pv.size()-1].score = pval;
-		//print_variation(pv);
+		if (debug) { print_variation(pv); }
 
 		return (pval);
 	}
@@ -160,13 +162,14 @@ int alphabeta(int depth, int alpha, int beta) {
 
 		if (pv.size() > 0) {
 			pv[pv.size()-1].score = pval;
-		//	print_variation(pv);
+			if (debug) { print_variation(pv); }
 		}
 
 		pv.pop_back();
-		if (pval >= beta) { /* cout << "^^^^^ CUTOFF pval(" << pval << ") >= beta(" << beta << ")" << endl; */ return (beta); }
+		// pval >= beta : cutoff high, move is too good it will never get played
+		if (pval >= beta) { if (debug) { cout << "^^^^^ CUTOFF pval(" << pval << ") >= beta(" << beta << ")" << endl; } return (beta); }
 		if (pval > alpha) {
-			//cout << "^^^^^ NEW BEST MOVE pval(" << pval << ") > alpha(" << alpha << ")" << endl;
+			if (debug) { cout << "^^^^^ NEW BEST MOVE pval(" << pval << ") > alpha(" << alpha << ")" << endl; }
 			//if (depth == search_depth) {
 			//	bestmove = moves[x];
 			//}
