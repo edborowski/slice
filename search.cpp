@@ -60,8 +60,17 @@ move_t movegen(int depth) {
 		takeback(moves[x]);
 		pv.pop_back();
 
-		if (moves[x].score > bestmove.score) {
-			bestmove = moves[x];
+		if (moves[x].score >= bestmove.score) {
+			// if the score is equal, we want to flip a coin to see if we
+			// use it as the best move or not.  If it's greater than, we
+			// always want to use it.
+			if (moves[x].score == bestmove.score) {
+				if (coin_toss()) {
+					bestmove = moves[x];
+				}
+			} else {
+				bestmove = moves[x];
+			}
 		} 
         cout << move_to_long_algebraic(moves[x]) << " " << moves[x].score << endl;
 	}

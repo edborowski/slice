@@ -43,7 +43,6 @@
  *  ucinewgame - new game
  *  go - evaluate the current position, return bestmove (not yet implemented)
  *  isready - reply readyok
- *  to be implemeneted: position
  *  debug - turn debug on/off - send debug info with the info string command
  *  register - example "register later" or "register name Stefan MK code 4359874324"
  *  position - get the position and moves from the engine
