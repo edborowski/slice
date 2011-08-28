@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "fen.h"
 #include "globals.h"
 

@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <ctime>
+#include <cstdlib>
 #include "globals.h"
 #include "proto.h"
 

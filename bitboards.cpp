@@ -1,4 +1,5 @@
 #include <cmath>
+#include <cstdlib>
 #include "globals.h"
 #include "proto.h"
 
