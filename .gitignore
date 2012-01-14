@@ -7,3 +7,4 @@ ipch
 *.sln
 *.sdf
 npstest.txt
+build
