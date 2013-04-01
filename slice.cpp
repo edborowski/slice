@@ -558,10 +558,16 @@ int main(int argc, char *argv[])
 			new_game(fen_start_pos);
 			isnewgame = true;
 		} else if (vinput[0] == "fenload") {
-			CFen cfenload = CFen();
-			cout << "FEN Filename: ";
-			cin >> fenfilename;
-			new_game(cfenload.LoadFromFile(fenfilename));
+			if (vinput.size() > 1) {
+				if (vinput[1] == "1") {
+					new_game("1k1r4/pp1b1R2/3q2pp/4p3/2B5/4Q3/PPP2B2/2K5 b - - 0 1");
+				}
+			} else {
+				CFen cfenload = CFen();
+				cout << "FEN Filename: ";
+				cin >> fenfilename;
+				new_game(cfenload.LoadFromFile(fenfilename));
+			}
 		} else if (vinput[0] == "searchdepth") {
 			cout << "Search Depth: ";
 			cin >> search_depth;

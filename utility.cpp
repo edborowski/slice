@@ -43,12 +43,12 @@ void print_chessboard() {
                 case WR: cout << "R"; break;
                 case WQ: cout << "Q"; break;
 				case WK: cout << "K"; break;
-                case BP: cout << "*"; break;
+                case BP: cout << "p"; break;
                 case BN: cout << "n"; break;
                 case BB: cout << "b"; break;
                 case BR: cout << "r"; break;
                 case BQ: cout << "q"; break;
-				case BK: cout << "+"; break;
+				case BK: cout << "k"; break;
                 default: cout << "-"; break;
             }
         }
